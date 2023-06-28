@@ -1,10 +1,21 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import Header from "./Components/Header";
 import ListaNotas from "./Components/ListaTareas";
 
+
+
 function App() {
-  const [lista, setLista] = useState([]);
+  const storedList = localStorage.getItem("tareas");
+  const listainicial = storedList ? JSON.parse(storedList) : [];
+
+  const [lista, setLista] = useState(listainicial);
   const [newNote, setNewNote] = useState("");
+
+  useEffect(() => {
+    localStorage.setItem("tareas", JSON.stringify(lista));
+  }, [lista]);
+
+ 
 
   const agregarNota = () => {
     if (newNote.trim() !== "") {
