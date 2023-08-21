@@ -10,47 +10,70 @@ function useTareasIniciales() {
 function useTareas() {
   const [lista, setLista] = useState(useTareasIniciales);
   const [newNote, setNewNote] = useState("");
-  const [editNote, setEditNote] = useState(null);
+  const [newDescription, setNewDescription] = useState("");
+  const [editNote, setEditNote] = useState(-1);
+  const [errorMessage, setErrorMessage] = useState("");
 
+  useEffect(() => {
+    localStorage.setItem("tareas", JSON.stringify(lista));
+  }, [lista]);
 
-useEffect(() => {
-  localStorage.setItem("tareas", JSON.stringify(lista));
-}, [lista]);
+  const agregarTarea = () => {
+    if (newNote.trim().length >= 3) {
+      const newTask = {
+        texto: newNote,
+        descripcion: newDescription,
+        completada: false,
+      };
+      if (editNote === -1) {
+        setLista([...lista, newTask]);
+      } else {
+        const newList = [...lista];
+        newList[editNote] = newTask;
+        setLista(newList);
+        setEditNote(-1);
+      }
+      setNewNote("");
+      setNewDescription("");
+      setErrorMessage("");
+    }else{
+      setErrorMessage("La tarea debe tener al menos 3 caracteres");
+      window.alert("La tarea debe tener al menos 3 caracteres");   
+    }
+    
+    setErrorMessage("")
+  };
 
-const agregarTarea = () => {
-  if (newNote.trim() !== "") {
-    if(editNote ===null){
-    setLista([...lista, { texto: newNote, completada: true }]);
-  } else {
+  const marcarTarea = (index) => {
     const newList = [...lista];
-    newList[editNote].texto = newNote
+    newList[index].completada = !newList[index].completada;
     setLista(newList);
-    setEditNote(null);
-  }      
-    setNewNote("");
-  }
-};
+  };
 
-const marcarTarea = (index) => {
-  const newList = [...lista];
-  newList[index].completada = !newList[index].completada;
-  setLista(newList);
-};
+  const editarTarea = (index) => {
+    setEditNote(index);
+    setNewNote(lista[index].texto);
+    setNewDescription(lista[index].descripcion); // Asegúrate de pasar la descripción
+  };
 
-const editarTarea = (index) => {
-  setEditNote(index);
-  setNewNote(lista[index].texto);
-};
+  const eliminarTarea = (index) => {
+    const newList = [...lista];
+    newList.splice(index, 1);
+    setLista(newList);
+  };
 
-
-const eliminarTarea = (index) => {
-  const newList = [...lista];
-  newList.splice(index, 1);
-  setLista(newList);
-};
-
-return { lista, newNote, setNewNote, agregarTarea, marcarTarea, editarTarea, eliminarTarea };
-};
+  return {
+    lista,
+    newNote,
+    setNewNote,
+    agregarTarea,
+    newDescription,
+    setNewDescription,
+    marcarTarea,
+    editarTarea,
+    eliminarTarea,
+  };
+}
 
 function App() {
   const {
@@ -58,22 +81,38 @@ function App() {
     newNote,
     setNewNote,
     agregarTarea,
+    newDescription,
+    setNewDescription,
     marcarTarea,
     editarTarea,
     eliminarTarea,
   } = useTareas();
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    agregarTarea();
+  }
+
   return (
     <div className="App">
       <Header />
-      <input
-        type="text"
-        value={newNote}
-        onChange={(e) => setNewNote(e.target.value)}
-        placeholder="¿Tienes tareas para hoy?"
-        style={{ fontSize: "20px" }}
-      />
-      <button onClick={agregarTarea}>Agregar tarea</button>
+      <form onSubmit={handleSubmit}>
+      
+        <input
+          type="text"
+          value={newNote}
+          onChange={(e) => setNewNote(e.target.value)}
+          placeholder="Nombre de la tarea (mínimo 3 caracteres)"
+          style={{ fontSize: "20px" }}
+        />
+        <textarea
+        value={newDescription}
+        onChange={(e) => setNewDescription(e.target.value)}
+        placeholder="Descripcion de tarea (opcional)"
+        style={{fontSize: "20px"}}
+        />
+        <button type="submit">Agregar tarea</button>
+      </form>
       <ListaNotas
         list={lista}
         marcarTarea={marcarTarea}
