@@ -1,7 +1,7 @@
 import { Nota } from "./Task";
 
 export const ListaNotas = (props) => {
-  const { list, marcarTarea, eliminarTarea } = props;
+  const { list, marcarTarea, eliminarTarea,editarTarea } = props;
 
   return (
     <ul>
@@ -11,6 +11,7 @@ export const ListaNotas = (props) => {
           note={item}
           estadoTarea={() => marcarTarea(index)}
           eliminarTarea={() => eliminarTarea(index)}
+          editarTarea= {() => editarTarea(index)}
         />
       ))}
     </ul>
