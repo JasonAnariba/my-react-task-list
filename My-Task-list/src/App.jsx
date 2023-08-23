@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Routes} from 'react-router-dom';
 import Header from "./Components/Header";
 import ListaNotas from "./Components/ListaTareas";
+import Home from "./Components/Home";
+import SobreNosotros from "./Components/SobreNosotros";
+import Menu from "./Components/Menu";
+
+
 
 function useTareasIniciales() {
   const storedList = localStorage.getItem("tareas");
@@ -95,32 +101,41 @@ function App() {
 
   return (
     <div className="App">
-      <Header />
-      <form onSubmit={handleSubmit}>
-      
-        <input
-          type="text"
-          value={newNote}
-          onChange={(e) => setNewNote(e.target.value)}
-          placeholder="Nombre de la tarea (mínimo 3 caracteres)"
-          style={{ fontSize: "20px" }}
-        />
-        <textarea
-        value={newDescription}
-        onChange={(e) => setNewDescription(e.target.value)}
-        placeholder="Descripcion de tarea (opcional)"
-        style={{fontSize: "20px"}}
-        />
-        <button type="submit">Agregar tarea</button>
-      </form>
-      <ListaNotas
-        list={lista}
-        marcarTarea={marcarTarea}
-        editarTarea={editarTarea}
-        eliminarTarea={eliminarTarea}
-      />
+      <BrowserRouter>
+        <Header />
+        <Menu />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/App" element={
+              <div>
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  value={newNote}
+                  onChange={(e) => setNewNote(e.target.value)}
+                  placeholder="Nombre de la tarea (mínimo 3 caracteres)"
+                  style={{ fontSize: "20px" }}
+                />
+                <textarea
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  placeholder="Descripcion de tarea (opcional)"
+                  style={{ fontSize: "20px" }}
+                />
+                <button type="submit">Agregar tarea</button>
+              </form>
+              <ListaNotas
+                list={lista}
+                marcarTarea={marcarTarea}
+                editarTarea={editarTarea}
+                eliminarTarea={eliminarTarea}
+              />
+            </div>
+           }/>
+          <Route path="/sobre-nosotros" element={<SobreNosotros />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
-
 export default App;
