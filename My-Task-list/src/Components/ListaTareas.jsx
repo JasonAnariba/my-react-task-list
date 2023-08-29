@@ -1,20 +1,29 @@
+import { Box, List, ListItem, Link, Text } from "@chakra-ui/react";
 import { Nota } from "./Task";
 
 export const ListaNotas = (props) => {
-  const { list, marcarTarea, eliminarTarea,editarTarea } = props;
+  const { list, marcarTarea, eliminarTarea, editarTarea } = props;
 
   return (
-    <ul>
+    <List styleType="none">
       {list.map((item, index) => (
-        <Nota
+        <Box
           key={index}
-          note={item}
-          estadoTarea={() => marcarTarea(index)}
-          eliminarTarea={() => eliminarTarea(index)}
-          editarTarea= {() => editarTarea(index)}
-        />
+          p={4} 
+          mb={4} 
+          bg="white" 
+          borderRadius="md" 
+          boxShadow="md" 
+        >
+          <Nota
+            note={item}
+            estadoTarea={() => marcarTarea(index)}
+            eliminarTarea={() => eliminarTarea(index)}
+            editarTarea={() => editarTarea(index)}
+          />
+        </Box>
       ))}
-    </ul>
+    </List>
   );
 };
 

@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes} from 'react-router-dom';
+import { ChakraProvider,CSSReset,extendTheme,Button,Box,Container,Heading,Text,Input,Textarea,VStack,List } from "@chakra-ui/react";
 import Header from "./Components/Header";
 import ListaNotas from "./Components/ListaTareas";
 import Home from "./Components/Home";
 import SobreNosotros from "./Components/SobreNosotros";
 import Menu from "./Components/Menu";
 
-
+const theme = extendTheme({
+  
+});
 
 function useTareasIniciales() {
   const storedList = localStorage.getItem("tareas");
@@ -59,7 +62,7 @@ function useTareas() {
   const editarTarea = (index) => {
     setEditNote(index);
     setNewNote(lista[index].texto);
-    setNewDescription(lista[index].descripcion); // Asegúrate de pasar la descripción
+    setNewDescription(lista[index].descripcion); 
   };
 
   const eliminarTarea = (index) => {
@@ -81,7 +84,7 @@ function useTareas() {
   };
 }
 
-function App() {
+export function App() {
   const {
     lista,
     newNote,
@@ -104,38 +107,72 @@ function App() {
       <BrowserRouter>
         <Header />
         <Menu />
+        <Container maxW="container.lg" mt={"20"}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/App" element={
-              <div>
+              <VStack spacing={4}>
               <form onSubmit={handleSubmit}>
-                <input
-                  type="text"
-                  value={newNote}
-                  onChange={(e) => setNewNote(e.target.value)}
-                  placeholder="Nombre de la tarea (mínimo 3 caracteres)"
-                  style={{ fontSize: "20px" }}
-                />
-                <textarea
+              <Input
+  type="text"
+  value={newNote}
+  onChange={(e) => setNewNote(e.target.value)}
+  placeholder="Nombre de la tarea (mínimo 3 caracteres)"
+  size="lg" // Controla el tamaño del input
+  fontSize="xl" // Controla el tamaño de la fuente
+  border="2px" // Controla el grosor del borde
+  borderColor="blue.500" // Controla el color del borde
+  borderRadius="md" // Controla la curvatura de los bordes
+  px={3} // Agrega espaciado horizontal interno
+  py={2} // Agrega espaciado vertical interno
+  _placeholder={{ color: "gray.500" }} // Estilos del placeholder
+  _focus={{ borderColor: "blue.500", boxShadow: "outline" }} // Estilos al enfocar
+/>
+                <Textarea
                   value={newDescription}
                   onChange={(e) => setNewDescription(e.target.value)}
                   placeholder="Descripcion de tarea (opcional)"
-                  style={{ fontSize: "20px" }}
-                />
-                <button type="submit">Agregar tarea</button>
+                  size="lg" // Controla el tamaño del input
+  fontSize="xl" // Controla el tamaño de la fuente
+  border="2px" // Controla el grosor del borde
+  borderColor="blue.500" // Controla el color del borde
+  borderRadius="md" // Controla la curvatura de los bordes
+  px={3} // Agrega espaciado horizontal interno
+  py={2} // Agrega espaciado vertical interno
+  _placeholder={{ color: "gray.500" }} // Estilos del placeholder
+  _focus={{ borderColor: "blue.500", boxShadow: "outline" }} // Estilos al enfocar
+/>
+                <Button type="submit" colorScheme="blue" >Agregar tarea</Button>
               </form>
+              <List w="100%">
               <ListaNotas
                 list={lista}
                 marcarTarea={marcarTarea}
                 editarTarea={editarTarea}
                 eliminarTarea={eliminarTarea}
               />
-            </div>
+              </List>
+            </VStack>
            }/>
           <Route path="/sobre-nosotros" element={<SobreNosotros />} />
         </Routes>
+        </Container>
       </BrowserRouter>
     </div>
   );
 }
-export default App;
+ 
+function Root() {
+  return (
+    <ChakraProvider theme={theme}>
+      <CSSReset />
+      <App />
+    </ChakraProvider>
+  );
+}
+
+export default Root;
+
+
+
+

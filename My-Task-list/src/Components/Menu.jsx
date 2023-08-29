@@ -1,14 +1,35 @@
-import { Link } from 'react-router-dom';
+
+
+import { Link as RouterLink } from "react-router-dom";
+import { List, ListItem, Text } from "@chakra-ui/react";
 
 const Menu = () => {
   return (
     <div>
       <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/App">La Aplicación Funcionando</Link></li>
-          <li><Link to="/sobre-nosotros">Sobre Nosotros</Link></li>
-        </ul>
+        <List display="flex" justifyContent="center" p={4}>
+          <ListItem>
+            <Text fontSize="lg" fontWeight="bold" mr={4}>
+              <RouterLink to="/" color="blue.500">
+                Home
+              </RouterLink>
+            </Text>
+          </ListItem>
+          <ListItem>
+            <Text fontSize="lg" fontWeight="bold" mr={4}>
+              <RouterLink to="/App" color="blue.500">
+               Lista de Tareas
+              </RouterLink>
+            </Text>
+          </ListItem>
+          <ListItem>
+            <Text fontSize="lg" fontWeight="bold" mr={4}>
+              <RouterLink to="/sobre-nosotros" color="blue.500">
+                Sobre Nosotros
+              </RouterLink>
+            </Text>
+          </ListItem>
+        </List>
       </nav>
     </div>
   );

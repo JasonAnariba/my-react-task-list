@@ -1,8 +1,9 @@
+import { Button, Flex } from "@chakra-ui/react";
 export const Nota = (props) => {
     const { note, estadoTarea, eliminarTarea, editarTarea} = props;
   
     if (!note || !note.texto) {
-      return null; // O muestra un mensaje de error, o simplemente no renderiza nada
+      return null; 
     }
 
     function revisiondetarea() {
@@ -14,11 +15,28 @@ export const Nota = (props) => {
     return (
       <ul>
       <li>
-       <span><strong>{note.texto}</strong></span>
-       {note.descripcion && <p>{note.descripcion}</p>}
-      <button onClick={estadoTarea}>{estado}</button>
-      <button onClick={eliminarTarea}>Eliminar</button>
-      <button onClick={editarTarea}>Editar Tarea</button>
+      
+       <span>
+        <strong>{note.texto}</strong>
+        </span>
+       <div>{note.descripcion && <p>{note.descripcion}</p>}</div>
+       
+       <Button
+          size="sm"
+          colorScheme={note.completada ? "green" : "blue"}
+          onClick={estadoTarea}
+          mr={2}
+        >
+          {estado}
+        </Button>
+        <Button size="sm" colorScheme="red" onClick={eliminarTarea} mr={2}>
+          Eliminar
+        </Button>
+        <Button size="sm" colorScheme="teal" onClick={editarTarea}>
+          Editar Tarea
+        </Button>
+        
+        
     </li>
     </ul>
     );
