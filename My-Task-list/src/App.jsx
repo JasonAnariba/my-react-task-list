@@ -1,6 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes} from 'react-router-dom';
-import { ChakraProvider,CSSReset,extendTheme,Button,Box,Container,Heading,Text,Input,Textarea,VStack,List } from "@chakra-ui/react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {
+  ChakraProvider,
+  CSSReset,
+  extendTheme,
+  Button,
+  Box,
+  Container,
+  Heading,
+  Text,
+  Input,
+  Textarea,
+  VStack,
+  List,
+  useColorMode,
+  ColorModeScript
+} from "@chakra-ui/react";
+
 import Header from "./Components/Header";
 import ListaNotas from "./Components/ListaTareas";
 import Home from "./Components/Home";
@@ -8,8 +24,12 @@ import SobreNosotros from "./Components/SobreNosotros";
 import Menu from "./Components/Menu";
 
 const theme = extendTheme({
-  
+  config: {
+    initialColorMode: "light", // Modo inicial (puede ser "light" o "dark")
+    useSystemColorMode: false, // Usar la configuración del sistema para modo oscuro
+  },
 });
+
 
 function useTareasIniciales() {
   const storedList = localStorage.getItem("tareas");
@@ -45,12 +65,12 @@ function useTareas() {
       setNewNote("");
       setNewDescription("");
       setErrorMessage("");
-    }else{
+    } else {
       setErrorMessage("La tarea debe tener al menos 3 caracteres");
-      window.alert("La tarea debe tener al menos 3 caracteres");   
+      window.alert("La tarea debe tener al menos 3 caracteres");
     }
-    
-    setErrorMessage("")
+
+    setErrorMessage("");
   };
 
   const marcarTarea = (index) => {
@@ -62,7 +82,7 @@ function useTareas() {
   const editarTarea = (index) => {
     setEditNote(index);
     setNewNote(lista[index].texto);
-    setNewDescription(lista[index].descripcion); 
+    setNewDescription(lista[index].descripcion);
   };
 
   const eliminarTarea = (index) => {
@@ -97,10 +117,12 @@ export function App() {
     eliminarTarea,
   } = useTareas();
 
+  const { colorMode } = useColorMode();
+
   const handleSubmit = (e) => {
     e.preventDefault();
     agregarTarea();
-  }
+  };
 
   return (
     <div className="App">
@@ -108,63 +130,69 @@ export function App() {
         <Header />
         <Menu />
         <Container maxW="container.lg" mt={"20"}>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/App" element={
-              <VStack spacing={4}>
-              <form onSubmit={handleSubmit}>
-              <Input
-  type="text"
-  value={newNote}
-  onChange={(e) => setNewNote(e.target.value)}
-  placeholder="Nombre de la tarea (mínimo 3 caracteres)"
-  size="lg" // Controla el tamaño del input
-  fontSize="xl" // Controla el tamaño de la fuente
-  border="2px" // Controla el grosor del borde
-  borderColor="blue.500" // Controla el color del borde
-  borderRadius="md" // Controla la curvatura de los bordes
-  px={3} // Agrega espaciado horizontal interno
-  py={2} // Agrega espaciado vertical interno
-  _placeholder={{ color: "gray.500" }} // Estilos del placeholder
-  _focus={{ borderColor: "blue.500", boxShadow: "outline" }} // Estilos al enfocar
-/>
-                <Textarea
-                  value={newDescription}
-                  onChange={(e) => setNewDescription(e.target.value)}
-                  placeholder="Descripcion de tarea (opcional)"
-                  size="lg" // Controla el tamaño del input
-  fontSize="xl" // Controla el tamaño de la fuente
-  border="2px" // Controla el grosor del borde
-  borderColor="blue.500" // Controla el color del borde
-  borderRadius="md" // Controla la curvatura de los bordes
-  px={3} // Agrega espaciado horizontal interno
-  py={2} // Agrega espaciado vertical interno
-  _placeholder={{ color: "gray.500" }} // Estilos del placeholder
-  _focus={{ borderColor: "blue.500", boxShadow: "outline" }} // Estilos al enfocar
-/>
-                <Button type="submit" colorScheme="blue" >Agregar tarea</Button>
-              </form>
-              <List w="100%">
-              <ListaNotas
-                list={lista}
-                marcarTarea={marcarTarea}
-                editarTarea={editarTarea}
-                eliminarTarea={eliminarTarea}
-              />
-              </List>
-            </VStack>
-           }/>
-          <Route path="/sobre-nosotros" element={<SobreNosotros />} />
-        </Routes>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/App"
+              element={
+                <VStack spacing={4}>
+                  <form onSubmit={handleSubmit}>
+                    <Input
+                      type="text"
+                      value={newNote}
+                      onChange={(e) => setNewNote(e.target.value)}
+                      placeholder="Nombre de la tarea (mínimo 3 caracteres)"
+                      size="lg" // Controla el tamaño del input
+                      fontSize="xl" // Controla el tamaño de la fuente
+                      border="2px" // Controla el grosor del borde
+                      borderColor="blue.500" // Controla el color del borde
+                      borderRadius="md" // Controla la curvatura de los bordes
+                      px={3} // Agrega espaciado horizontal interno
+                      py={2} // Agrega espaciado vertical interno
+                      _placeholder={{ color: "gray.500" }} // Estilos del placeholder
+                      _focus={{ borderColor: "blue.500", boxShadow: "outline" }} // Estilos al enfocar
+                    />
+                    <Textarea
+                      value={newDescription}
+                      onChange={(e) => setNewDescription(e.target.value)}
+                      placeholder="Descripcion de tarea (opcional)"
+                      size="lg" // Controla el tamaño del input
+                      fontSize="xl" // Controla el tamaño de la fuente
+                      border="2px" // Controla el grosor del borde
+                      borderColor="blue.500" // Controla el color del borde
+                      borderRadius="md" // Controla la curvatura de los bordes
+                      px={3} // Agrega espaciado horizontal interno
+                      py={2} // Agrega espaciado vertical interno
+                      _placeholder={{ color: "gray.500" }} // Estilos del placeholder
+                      _focus={{ borderColor: "blue.500", boxShadow: "outline" }} // Estilos al enfocar
+                    />
+                    <Button type="submit" colorScheme="blue">
+                      Agregar tarea
+                    </Button>
+                  </form>
+                  <List w="100%">
+                    <ListaNotas
+                      list={lista}
+                      marcarTarea={marcarTarea}
+                      editarTarea={editarTarea}
+                      eliminarTarea={eliminarTarea}
+                    />
+                  </List>
+                </VStack>
+              }
+            />
+            <Route path="/sobre-nosotros" element={<SobreNosotros />} />
+          </Routes>
         </Container>
       </BrowserRouter>
     </div>
   );
 }
- 
+
 function Root() {
   return (
     <ChakraProvider theme={theme}>
+       <ColorModeScript initialColorMode={theme.config.initialColorMode} />
       <CSSReset />
       <App />
     </ChakraProvider>
@@ -172,7 +200,3 @@ function Root() {
 }
 
 export default Root;
-
-
-
-
